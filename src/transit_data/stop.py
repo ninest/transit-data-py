@@ -7,7 +7,19 @@ def notNaN(val):
 
 def get_stops(agency: str):
     base_path = f"GTFS_feeds/{agency}"
-    stops = pd.read_csv(f"{base_path}/stops.txt")
+
+    stops = pd.read_csv(f"{base_path}/stops.txt", dtype={"stop_id": str})
+    # Ensure 'parent_station' is in stops DataFrame, if not, create it
+    if "parent_station" not in stops.columns:
+        stops["parent_station"] = stops["stop_id"]
+    else:
+        # Fill NaN parent_stations with their own stop_id
+        stops["parent_station"] = stops["parent_station"].fillna(stops["stop_id"])
+
+    # Ensure all potential fields are present
+    for col in ["stop_address", "zone_id", "vehicle_type"]:
+        if col not in stops.columns:
+            stops[col] = None
 
     stops_info = stops.to_dict("records")
 
