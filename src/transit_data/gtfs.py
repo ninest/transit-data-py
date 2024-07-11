@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 from .utils.file import download_zip
 from .models import GTFSFeed, Operator
@@ -45,11 +46,11 @@ feeds = [
 ]
 
 
-def get_feed(location_code: str, id: str):
+def get_feed(location_code: str, id: Optional[str] = None):
     for feed in feeds:
         if (
             location_code is None or feed.location_code.lower() == location_code.lower()
-        ) and (id is None or feed.id.lower() == id.lower()):
+        ) or (id is None or feed.id.lower() == id.lower()):
             return feed
     return None
 

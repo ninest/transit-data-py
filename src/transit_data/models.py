@@ -29,10 +29,10 @@ class Location(BaseSchema):
 
 
 class Stop(BaseSchema):
-    id: str = Field(alias="stop_id")
-    name: str = Field(alias="stop_name")
-    url: Optional[str] = Field(alias="stop_url")
-    address: Optional[str] = Field(alias="stop_address")
+    id: str = Field(validation_alias="stop_id")
+    name: str = Field(validation_alias="stop_name")
+    url: Optional[str] = Field(validation_alias="stop_url")
+    address: Optional[str] = Field(validation_alias="stop_address")
     parent_station: str
     location: Optional[Location]
     zone_id: Optional[str]
@@ -48,16 +48,16 @@ class StopId(BaseSchema):  # think of better name
 
 
 class Line(BaseSchema):
-    id: str = Field(alias="line_id")
-    color: str = Field(alias="line_color")
-    text_color: str = Field(alias="line_text_color")
-    long_name: str = Field(alias="line_long_name")
-    directions: List
+    id: str = Field(validation_alias="line_id")
+    color: str = Field(validation_alias="line_color")
+    text_color: str = Field(validation_alias="line_text_color")
+    long_name: str = Field(validation_alias="line_long_name")
+    directions: List["Direction"]
 
 
 class Direction(BaseSchema):
-    id: str = Field(alias="direction_id")
-    name: str = Field(alias="direction_name")
+    id: str = Field(validation_alias="direction_id")
+    name: str = Field(validation_alias="direction_name")
     destination: str
     stops: List[StopId]
     order: Dict[str, List[str]]  # Record of parent_station to List[parent_station]
