@@ -17,7 +17,7 @@ def get_stops(agency: str):
         stops["parent_station"] = stops["parent_station"].fillna(stops["stop_id"])
 
     # Ensure all potential fields are present
-    for col in ["stop_address", "zone_id", "vehicle_type"]:
+    for col in ["stop_address", "stop_url", "zone_id", "vehicle_type"]:
         if col not in stops.columns:
             stops[col] = None
 
@@ -40,15 +40,15 @@ def get_stops(agency: str):
         )
         return_stops.append(
             {
-                "stopId": stop["stop_id"],
-                "stopName": stop["stop_name"],
+                "stop_id": stop["stop_id"],
+                "stop_name": stop["stop_name"],
+                "stop_url": stop_url,
+                "stop_address": notNaN(stop["stop_address"]),
+                "parent_station": parent_station,
                 "location": location,
-                "stopUrl": stop_url,
-                "parentStation": parent_station,
-                "stopAddress": notNaN(stop["stop_address"]),
-                "zoneId": notNaN(stop["zone_id"]),
-                "vehicleType": notNaN(stop["vehicle_type"]),
-                "wheelchairBoarding": notNaN(stop["wheelchair_boarding"]),
+                "zone_id": notNaN(stop["zone_id"]),
+                "vehicle_type": notNaN(stop["vehicle_type"]),
+                "wheelchair_boarding": notNaN(stop["wheelchair_boarding"]),
             }
         )
 
