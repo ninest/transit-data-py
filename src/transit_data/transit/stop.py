@@ -5,8 +5,8 @@ def notNaN(val):
     return None if pd.isna(val) else val
 
 
-def get_stops(agency: str):
-    base_path = f"GTFS_feeds/{agency}"
+def get_stops(location_code: str, agency: str):
+    base_path = f"GTFS_feeds/{location_code}/{agency}"
 
     stops = pd.read_csv(f"{base_path}/stops.txt", dtype={"stop_id": str})
     # Ensure 'parent_station' is in stops DataFrame, if not, create it

@@ -1,14 +1,15 @@
 import os
 import json
+from typing import Any
 import requests
 import zipfile
 
 
-def write_dict_to_file(dictionary: dict, path: str):
+def write_to_file(data: Any, path: str):
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
     with open(path, "w") as json_file:
-        json.dump(dictionary, json_file, indent=4)
+        json.dump(data, json_file, indent=4)
 
 
 def download_zip(url, save_path):
@@ -28,3 +29,13 @@ def download_zip(url, save_path):
 
     # Remove the zip file after extraction
     os.remove(zip_path)
+
+
+def read_json_file(path: str):
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"No such file: '{path}'")
+
+    with open(path, "r") as json_file:
+        data = json.load(json_file)
+
+    return data

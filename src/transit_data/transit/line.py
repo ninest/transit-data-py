@@ -1,8 +1,40 @@
 import pandas as pd
 
+from transit_data.utils.pandas import notNaN
 
-def get_full_line(agency: str, route_id: str):
-    base_path = f"GTFS_feeds/{agency}"
+
+def get_route_ids(location_code: str, agency: str):
+    base_path = f"GTFS_feeds/{location_code}/{agency}"
+
+    routes = pd.read_csv(f"{base_path}/routes.txt", dtype={"route_id": str})
+    route_ids = routes["route_id"].tolist()
+
+    return route_ids
+
+
+def get_lines(location_code: str, agency: str):
+    base_path = f"GTFS_feeds/{location_code}/{agency}"
+    routes = pd.read_csv(f"{base_path}/routes.txt", dtype={"route_id": str})
+
+    lines = []
+
+    for _, route in routes.iterrows():
+        line_data = {
+            "line_id": route[
+                "route_id"
+            ],  # although this is route information, use line
+            "line_color": route.get("route_color", None),
+            "line_text_color": route.get("route_text_color", None),
+            "line_long_name": notNaN(route["route_long_name"]),
+            "line_url": notNaN( route.get("route_url", None)),
+        }
+        lines.append(line_data)
+
+    return lines
+
+
+def get_full_line(location_code: str, agency: str, route_id: str):
+    base_path = f"GTFS_feeds/{location_code}/{agency}"
 
     routes = pd.read_csv(f"{base_path}/routes.txt", dtype={"route_id": str})
     trips = pd.read_csv(
@@ -117,9 +149,10 @@ def get_full_line(agency: str, route_id: str):
     route = line_routes.iloc[0]
     return_line = {
         "line_id": route_id,  # although this is route information, use line
-        "line_color": route.get("route_color", ""),
-        "line_text_color": route.get("route_text_color", ""),
+        "line_color": route.get("route_color", None),
+        "line_text_color": route.get("route_text_color", None),
         "line_long_name": route["route_long_name"],
+        "line_url": route.get("route_url", None),
         "directions": stations_by_direction,
     }
 

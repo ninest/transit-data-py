@@ -52,6 +52,9 @@ class Line(BaseSchema):
     color: str = Field(validation_alias="line_color")
     text_color: str = Field(validation_alias="line_text_color")
     long_name: str = Field(validation_alias="line_long_name")
+
+
+class FullLine(Line):
     directions: List["Direction"]
 
 

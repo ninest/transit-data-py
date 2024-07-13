@@ -88,6 +88,8 @@ requests==2.32.3
     # via folium
 rich==13.7.1
     # via typer
+scalar-fastapi==1.0.2
+    # via transit-data
 shellingham==1.5.4
     # via typer
 six==1.16.0

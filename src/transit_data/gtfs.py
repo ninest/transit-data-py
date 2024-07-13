@@ -13,7 +13,7 @@ feeds = [
         url="https://cdn.mbta.com/MBTA_GTFS.zip",
         operators=[
             Operator(id="MBTA", name="MBTA"),
-            Operator(id="CCRTA", name="Cape Cod Regional Transit Authority"),
+            # Operator(id="CCRTA", name="Cape Cod Regional Transit Authority"),
         ],
     ),
     GTFSFeed(
