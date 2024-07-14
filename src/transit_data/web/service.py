@@ -64,11 +64,20 @@ class FileTransitService(ITransitService):
                 return o
         raise Exception("operator id not found")
 
-    def get_stops(self, location_id: str, operator_id: str) -> list[Stop]:
+    def get_stops(self, location_code: str, operator_id: str) -> list[Stop]:
         stops_data = read_json_file(
-            f"{BASE_FILE_PATH}/{location_id}/{operator_id}/stops.json"
+            f"{BASE_FILE_PATH}/{location_code}/{operator_id}/stops.json"
         )
         stops = [Stop(**data) for data in stops_data]
+        return stops
+
+    def get_stops_by_location(self, location_code: str) -> list[Stop]:
+        stops: list[Stop] = []
+        for feed in self.get_feeds_by_location(location_code):
+            print(feed)
+            for operator in feed.operators:
+                print(operator)
+                stops.extend(self.get_stops(location_code, operator.id))
         return stops
 
     def get_lines_by_location(self, location_code: str) -> list[Line]:
@@ -92,12 +101,17 @@ class FileTransitService(ITransitService):
         lines = [Line(**data) for data in lines_data]
         return lines
 
-    def get_line(self, location_code: str, operator_id: str, route_id: str) -> FullLine:
-        line_data = read_json_file(
-            f"{BASE_FILE_PATH}/{location_code}/{operator_id}/lines/{route_id}.json"
-        )
-        print(line_data["directions"])
-        return FullLine(**line_data)
+    def get_line(self, location_code: str, route_id: str) -> FullLine:
+        for feed in self.get_feeds_by_location(location_code):
+            for operator in feed.operators:
+                lines = self.get_lines(location_code, operator.id)
+                for line in lines:
+                    if line.id.lower() == route_id.lower():
+                        full_line_data = read_json_file(
+                            f"{BASE_FILE_PATH}/{location_code}/{operator.id}/lines/{line.id}.json"
+                        )
+                        return FullLine(**full_line_data)
+        raise Exception(f"could not find line {route_id}")
 
 
 transit_service = FileTransitService()

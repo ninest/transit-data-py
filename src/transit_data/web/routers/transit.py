@@ -14,12 +14,10 @@ async def get_feeds(location_code: str) -> list[GTFSFeed]:
     return feeds
 
 
-@router.get("/{location_code}/lines", tags=["lines"])
-async def get_lines_by_location(location_code: str) -> list[Line]:
-    lines = transit_service.get_lines_by_location(
-        location_code,
-    )
-    return lines
+@router.get("/{location_code}/stops", tags=["stops"])
+async def get_stops(location_code: str) -> list[Stop]:
+    stops = transit_service.get_stops_by_location(location_code)
+    return stops
 
 
 @router.get("/{location_code}/{operator_id}", tags=["operators"])
@@ -28,19 +26,21 @@ async def get_operator(location_code: str, operator_id: str) -> Operator:
     return operator
 
 
-@router.get("/{location_code}/{operator_id}/stops", tags=["stops"])
-async def get_stops(location_code: str, operator_id: str) -> list[Stop]:
-    stops = transit_service.get_stops(location_code, operator_id)
-    return stops
-
-
-@router.get("/{location_code}/{operator_id}/lines", tags=["lines"])
-async def get_lines(location_code: str, operator_id: str) -> list[Line]:
-    lines = transit_service.get_lines(location_code, operator_id)
+@router.get("/{location_code}/lines", tags=["lines"])
+async def get_lines_by_location(location_code: str) -> list[Line]:
+    lines = transit_service.get_lines_by_location(
+        location_code,
+    )
     return lines
 
 
-@router.get("/{location_code}/{operator_id}/lines/{route_id}", tags=["lines"])
-async def get_line(location_code: str, operator_id: str, route_id: str) -> FullLine:
-    lines = transit_service.get_line(location_code, operator_id, route_id)
+# @router.get("/{location_code}/lines", tags=["lines"])
+# async def get_lines(location_code: str, operator_id: str) -> list[Line]:
+#     lines = transit_service.get_lines(location_code, operator_id)
+#     return lines
+
+
+@router.get("/{location_code}/lines/{route_id}", tags=["lines"])
+async def get_line(location_code: str, route_id: str) -> FullLine:
+    lines = transit_service.get_line(location_code, route_id)
     return lines
