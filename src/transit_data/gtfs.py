@@ -1,9 +1,7 @@
-from dataclasses import dataclass
 from typing import Optional
 
-from .utils.file import download_zip
 from .models import GTFSFeed, Operator
-
+from .utils.file import download_zip
 
 feeds = [
     # USA
@@ -11,8 +9,14 @@ feeds = [
         id="mbta",
         location_code="us-ma",
         url="https://cdn.mbta.com/MBTA_GTFS.zip",
+        name="Massachusets Bay Transit Authority",
         operators=[
-            Operator(id="MBTA", name="MBTA"),
+            Operator(
+                id="MBTA",
+                name="MBTA",
+                full_name="Massachusets Bay Transit Authority",
+                short_name="MBTA",
+            ),
             # Operator(id="CCRTA", name="Cape Cod Regional Transit Authority"),
         ],
     ),
@@ -20,8 +24,14 @@ feeds = [
         id="cta",
         location_code="us-il",
         url="http://www.transitchicago.com/downloads/sch_data/google_transit.zip",
+        name="Chicago Transit Authority",
         operators=[
-            Operator(id="CTA", name="Chicago Transit Authority"),
+            Operator(
+                id="CTA",
+                name="Chicago Transit Authority",
+                full_name="Chicago Transit Authority",
+                short_name="CTA",
+            ),
         ],
     ),
     # USA

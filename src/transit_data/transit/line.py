@@ -1,10 +1,11 @@
 import pandas as pd
 
+from transit_data.models import GTFSFeed, Operator
 from transit_data.utils.pandas import notNaN
 
 
-def get_route_ids(location_code: str, agency: str):
-    base_path = f"GTFS_feeds/{location_code}/{agency}"
+def get_route_ids(feed: GTFSFeed, operator: Operator):
+    base_path = f"GTFS_feeds/{feed.location_code}/{operator.id}"
 
     routes = pd.read_csv(f"{base_path}/routes.txt", dtype={"route_id": str})
     route_ids = routes["route_id"].tolist()
@@ -12,8 +13,8 @@ def get_route_ids(location_code: str, agency: str):
     return route_ids
 
 
-def get_lines(location_code: str, agency: str):
-    base_path = f"GTFS_feeds/{location_code}/{agency}"
+def get_lines(feed: GTFSFeed, operator: Operator):
+    base_path = f"GTFS_feeds/{feed.location_code}/{operator.id}"
     routes = pd.read_csv(f"{base_path}/routes.txt", dtype={"route_id": str})
 
     lines = []
@@ -25,16 +26,18 @@ def get_lines(location_code: str, agency: str):
             ],  # although this is route information, use line
             "line_color": route.get("route_color", None),
             "line_text_color": route.get("route_text_color", None),
+            "line_short_name": notNaN(route["route_short_name"]),
             "line_long_name": notNaN(route["route_long_name"]),
-            "line_url": notNaN( route.get("route_url", None)),
+            "line_url": notNaN(route.get("route_url", None)),
+            "route_type": route["route_type"],
         }
         lines.append(line_data)
 
     return lines
 
 
-def get_full_line(location_code: str, agency: str, route_id: str):
-    base_path = f"GTFS_feeds/{location_code}/{agency}"
+def get_full_line(feed: GTFSFeed, operator: Operator, route_id: str):
+    base_path = f"GTFS_feeds/{feed.location_code}/{operator.id}"
 
     routes = pd.read_csv(f"{base_path}/routes.txt", dtype={"route_id": str})
     trips = pd.read_csv(
@@ -152,6 +155,7 @@ def get_full_line(location_code: str, agency: str, route_id: str):
         "line_color": route.get("route_color", None),
         "line_text_color": route.get("route_text_color", None),
         "line_long_name": route["route_long_name"],
+        "line_short_name": notNaN(route["route_short_name"]),
         "line_url": route.get("route_url", None),
         "directions": stations_by_direction,
     }

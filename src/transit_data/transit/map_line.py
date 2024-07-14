@@ -12,8 +12,8 @@ def calculate_center(coords_list):
     return [sum(latitudes) / len(latitudes), sum(longitudes) / len(longitudes)]
 
 
-def get_map_line_coords(location_code: str, agency: str, route_id: str):
-    base_path = f"GTFS_feeds/{location_code}/{agency}"
+def get_map_line_coords(location_code: str, operator_id: str, route_id: str):
+    base_path = f"GTFS_feeds/{location_code}/{operator_id}"
 
     # Load the required GTFS files
     routes = pd.read_csv(f"{base_path}/routes.txt", dtype={"route_id": str})

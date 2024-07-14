@@ -1,14 +1,15 @@
 import pandas as pd
 
+from transit_data.models import GTFSFeed, Operator
+from transit_data.utils.pandas import notNaN
 
-def notNaN(val):
-    return None if pd.isna(val) else val
 
-
-def get_stops(location_code: str, agency: str):
-    base_path = f"GTFS_feeds/{location_code}/{agency}"
+# def get_stops(location_code: str, feed_id: str, operator_id: str):
+def get_stops(feed: GTFSFeed, operator: Operator):
+    base_path = f"GTFS_feeds/{feed.location_code}/{feed.id}"
 
     stops = pd.read_csv(f"{base_path}/stops.txt", dtype={"stop_id": str})
+
     # Ensure 'parent_station' is in stops DataFrame, if not, create it
     if "parent_station" not in stops.columns:
         stops["parent_station"] = stops["stop_id"]

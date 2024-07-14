@@ -41,6 +41,7 @@ def main():
 
 
 def process_feed(feed: GTFSFeed):
+    """Process a GTFS feed, which may have multiple operators"""
     print(f"Starting {feed.id}")
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
@@ -54,13 +55,13 @@ def process_operator(feed: GTFSFeed, operator: Operator):
 
     base_save_path = f"./out/{feed.location_code}/{operator.id}"
 
-    stops = get_stops(feed.location_code, operator.id)
+    stops = get_stops(feed, operator)
     write_to_file(stops, f"{base_save_path}/stops.json")
 
-    lines = get_lines(feed.location_code, operator.id)
+    lines = get_lines(feed, operator)
     write_to_file(lines, f"{base_save_path}/lines.json")
 
-    route_ids = get_route_ids(feed.location_code, operator.id)
+    route_ids = get_route_ids(feed, operator)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         futures = [
@@ -76,7 +77,8 @@ def process_route(
     feed: GTFSFeed, operator: Operator, route_id: str, base_save_path: str
 ):
     print(f"Starting {feed.id}/{operator.id}/{route_id}")
-    line = get_full_line(feed.location_code, operator.id, route_id)
+
+    line = get_full_line(feed, operator, route_id)
     write_to_file(line, f"{base_save_path}/lines/{route_id}.json")
 
     map_line = get_map_line_coords(feed.location_code, operator.id, route_id)
